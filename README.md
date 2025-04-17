@@ -1,4 +1,4 @@
-📊 Air Quality Prediction Using LSTM Networks
+📊 **Air Quality Prediction Using LSTM Networks**
 
 This project demonstrates how to use Long Short-Term Memory (LSTM) networks to predict air quality levels—specifically PM2.5—based on synthetic time-series data. It showcases the full pipeline: from synthetic data generation to training an LSTM model and visualizing predictions.
 📁 Project Structure
@@ -8,7 +8,7 @@ This project demonstrates how to use Long Short-Term Memory (LSTM) networks to p
 ├── air_quality_lstm.py              # Python script with LSTM model
 └── README.md                        # Project description
 
-🔧 Requirements
+🔧 **Requirements**
 
 To run this project, make sure the following Python packages are installed:
 
