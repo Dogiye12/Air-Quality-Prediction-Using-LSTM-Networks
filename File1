@@ -1,0 +1,68 @@
+# Air Quality Prediction using LSTM with Synthetic Data
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+
+# 1. Generate synthetic air quality data (e.g., PM2.5)
+np.random.seed(42)
+time_steps = 300
+t = np.arange(0, time_steps)
+# Synthetic PM2.5 data with seasonality and noise
+pm25 = 50 + 10 * np.sin(2 * np.pi * t / 50) + np.random.normal(0, 2, time_steps)
+
+# Create DataFrame
+df = pd.DataFrame({'PM2.5': pm25})
+
+# 2. Normalize data
+scaler = MinMaxScaler()
+df_scaled = scaler.fit_transform(df)
+
+# 3. Create sequences for LSTM
+def create_sequences(data, seq_length):
+    X, y = [], []
+    for i in range(len(data) - seq_length):
+        X.append(data[i:i+seq_length])
+        y.append(data[i+seq_length])
+    return np.array(X), np.array(y)
+
+seq_length = 20
+X, y = create_sequences(df_scaled, seq_length)
+
+# Reshape input to LSTM expected [samples, time_steps, features]
+X = X.reshape((X.shape[0], X.shape[1], 1))
+
+# 4. Split into train and test
+train_size = int(len(X) * 0.8)
+X_train, X_test = X[:train_size], X[train_size:]
+y_train, y_test = y[:train_size], y[train_size:]
+
+# 5. Define LSTM model
+model = Sequential([
+    LSTM(50, activation='relu', input_shape=(seq_length, 1)),
+    Dense(1)
+])
+model.compile(optimizer='adam', loss='mse')
+model.summary()
+
+# 6. Train the model
+history = model.fit(X_train, y_train, epochs=30, validation_data=(X_test, y_test), verbose=1)
+
+# 7. Predict and inverse scale
+y_pred = model.predict(X_test)
+y_pred_inv = scaler.inverse_transform(y_pred)
+y_test_inv = scaler.inverse_transform(y_test)
+
+# 8. Plot the results
+plt.figure(figsize=(10, 5))
+plt.plot(y_test_inv, label='Actual PM2.5')
+plt.plot(y_pred_inv, label='Predicted PM2.5')
+plt.title("Air Quality Prediction (PM2.5)")
+plt.xlabel("Time Steps")
+plt.ylabel("PM2.5")
+plt.legend()
+plt.show()
