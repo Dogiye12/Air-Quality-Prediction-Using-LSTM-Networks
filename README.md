@@ -40,6 +40,8 @@ pip install numpy pandas matplotlib scikit-learn tensorflow openpyxl
 
 👨‍💻 Author
 
-Ebiere  geosoftconsultingltd@gmail.com 
+Amos Meremu Dogiye
+Github: https://github.com/Dogiye12
+LinkedIn: https://www.linkedin.com/in/meremu-amos-993333314/
 
 If you use or adapt this project, consider citing or linking to this GitHub project.
